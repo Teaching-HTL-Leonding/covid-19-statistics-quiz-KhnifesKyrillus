@@ -10,6 +10,10 @@ namespace CoronaStatisticsAPI
         {
         }
 
-        public DbSet<CovidCases> Cases { get; set; }
+        public DbSet<FederalState> FederalStates { get; set; }
+
+        public DbSet<District> Districts { get; set; }
+
+        public DbSet<CovidCases> CovidCases { get; set; }
     }
 }

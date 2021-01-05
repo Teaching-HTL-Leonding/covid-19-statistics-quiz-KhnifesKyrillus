@@ -10,6 +10,6 @@ namespace CoronaStatisticsAPI.Model
         public int Population { get; set; }
         public int Cases { get; set; }
         public int Deaths { get; set; }
-        public int WeekIncidence { get; set; }
+        public int SevenDaysIncidents { get; set; }
     }
 }
