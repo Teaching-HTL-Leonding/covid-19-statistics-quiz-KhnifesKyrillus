@@ -15,6 +15,6 @@ namespace CoronaStatisticsAPI.Model
         public String Name { get; set; }
 
         [JsonIgnore]
-        public List<CovidCases> Cases { get; set; }
+        public List<CovidCases> Cases { get; set; } = new List<CovidCases>();
     }
 }

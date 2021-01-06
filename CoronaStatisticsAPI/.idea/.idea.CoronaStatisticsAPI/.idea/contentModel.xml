@@ -17,6 +17,8 @@
         <e p="Migrations" t="Include">
           <e p="20201211213741_init.cs" t="Include" />
           <e p="20201211213741_init.Designer.cs" t="Include" />
+          <e p="20210106222333_Init.cs" t="Include" />
+          <e p="20210106222333_Init.Designer.cs" t="Include" />
           <e p="StatisticsContextModelSnapshot.cs" t="Include" />
         </e>
         <e p="Model" t="Include">
