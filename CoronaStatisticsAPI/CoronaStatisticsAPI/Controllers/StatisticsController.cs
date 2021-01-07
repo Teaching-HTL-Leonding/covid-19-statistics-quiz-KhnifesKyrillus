@@ -41,19 +41,16 @@ namespace CoronaStatisticsAPI.Controllers
 
         // GET: api/states/{id}/cases
         [HttpGet("states/{id}/cases")]
-        public async Task<TotalCasesResult> GetCases(int id)
-        {
-            return _context.CovidCases
-                .Where(c => c.District.State == GetState(id).Result).Include(c => c.District).Select(c =>
-                    new TotalCasesResult(c.District.State.Id, c.Date, _context.CovidCases
-                            .Where(cc => cc.District.State.Equals(c.District.State))
-                            .Sum(cc => cc.Population),
-                        _context.CovidCases.Count(cc => cc.District.State.Equals(c.District.State)), _context.CovidCases
-                            .Where(cc => cc.District.State.Equals(c.District.State))
-                            .Sum(cc => cc.Deaths), _context.CovidCases.Where(cc => cc.District.Equals(c.District))
-                            .Sum(cc => cc.SevenDaysIncidents))
-                ).First();
-        }
+        public async Task<TotalCasesResult> GetCases(int id) => await _context.CovidCases
+            .Where(c => c.District.State == GetState(id).Result).Include(c => c.District).Select(c =>
+                new TotalCasesResult(c.District.State.Id, c.Date, _context.CovidCases
+                        .Where(cc => cc.District.State.Equals(c.District.State))
+                        .Sum(cc => cc.Population),
+                    _context.CovidCases.Count(cc => cc.District.State.Equals(c.District.State)), _context.CovidCases
+                        .Where(cc => cc.District.State.Equals(c.District.State))
+                        .Sum(cc => cc.Deaths), _context.CovidCases.Where(cc => cc.District.Equals(c.District))
+                        .Sum(cc => cc.SevenDaysIncidents))
+            ).FirstAsync();
 
         // POST: api/importData
         [HttpPost("importData")]
