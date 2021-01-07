@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace CoronaStatisticsAPI.Model
@@ -12,9 +11,9 @@ namespace CoronaStatisticsAPI.Model
         public FederalState State { get; set; }
 
         public int Code { get; set; }
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         [JsonIgnore]
-        public List<CovidCases> Cases { get; set; } = new List<CovidCases>();
+        public List<CovidCases> Cases { get; set; } = new();
     }
 }

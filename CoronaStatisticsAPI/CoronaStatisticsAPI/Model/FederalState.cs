@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace CoronaStatisticsAPI.Model
 {
@@ -8,8 +6,8 @@ namespace CoronaStatisticsAPI.Model
     {
         public int Id { get; set; }
 
-        public String Name { get; set; }
+        public string Name { get; set; }
 
-        public List<District> Districts { get; set; } = new List<District>();
+        public List<District> Districts { get; set; } = new();
     }
 }
