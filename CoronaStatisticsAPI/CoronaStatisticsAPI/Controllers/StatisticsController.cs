@@ -25,32 +25,29 @@ namespace CoronaStatisticsAPI.Controllers
 
         // GET: api/states
         [HttpGet("states")]
-        public async Task<IEnumerable<FederalState>> GetStates()
-        {
-            return await _context.FederalStates.Include(s =>
-                s.Districts).ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<FederalState>>> GetStates() =>
+            await _context.FederalStates.AnyAsync()
+                ? Ok(await _context.FederalStates.Include(s =>
+                    s.Districts).ToListAsync())
+                : NotFound();
 
+        private async Task<FederalState> GetState(int id) => await _context.FederalStates.FindAsync(id);
 
-        // GET: api/states/{id}
-        [HttpGet("states/{id}")]
-        public async Task<FederalState> GetState([FromRoute] int id)
-        {
-            return await _context.FederalStates.FindAsync(id);
-        }
 
         // GET: api/states/{id}/cases
         [HttpGet("states/{id}/cases")]
-        public async Task<TotalCasesResult> GetCases(int id) => await _context.CovidCases
-            .Where(c => c.District.State == GetState(id).Result).Include(c => c.District).Select(c =>
-                new TotalCasesResult(c.District.State.Id, c.Date, _context.CovidCases
-                        .Where(cc => cc.District.State.Equals(c.District.State))
-                        .Sum(cc => cc.Population),
-                    _context.CovidCases.Count(cc => cc.District.State.Equals(c.District.State)), _context.CovidCases
-                        .Where(cc => cc.District.State.Equals(c.District.State))
-                        .Sum(cc => cc.Deaths), _context.CovidCases.Where(cc => cc.District.Equals(c.District))
-                        .Sum(cc => cc.SevenDaysIncidents))
-            ).FirstAsync();
+        public async Task<ActionResult<TotalCasesResult>> GetCases(int id) => await _context.CovidCases.AnyAsync()
+            ? Ok(await _context.CovidCases
+                .Where(c => c.District.State == GetState(id).Result).Include(c => c.District).Select(c =>
+                    new TotalCasesResult(c.District.State.Id, c.Date, _context.CovidCases
+                            .Where(cc => cc.District.State.Equals(c.District.State))
+                            .Sum(cc => cc.Population),
+                        _context.CovidCases.Count(cc => cc.District.State.Equals(c.District.State)), _context.CovidCases
+                            .Where(cc => cc.District.State.Equals(c.District.State))
+                            .Sum(cc => cc.Deaths), _context.CovidCases.Where(cc => cc.District.Equals(c.District))
+                            .Sum(cc => cc.SevenDaysIncidents))
+                ).FirstAsync())
+            : NotFound();
 
         // POST: api/importData
         [HttpPost("importData")]
@@ -77,7 +74,7 @@ namespace CoronaStatisticsAPI.Controllers
                 .Select(c => c.Split(";"))
                 .Select(c =>
                 {
-                    var district = _context.Districts.FirstOrDefault(d => d.Code == int.Parse(c[1]));
+                    var district = _context.Districts.First(d => d.Code == int.Parse(c[1]));
                     var covid19Case = new CovidCases
                     {
                         Date = DateTime.Today,
@@ -107,14 +104,14 @@ namespace CoronaStatisticsAPI.Controllers
 
             string[] districtArray = data.Split("\n");
             var federalStates = districtArray.Skip(3)
-                .SkipLast(2)
+                .SkipLast(1)
                 .Select(s => s.Split(";"))
                 .Select(s => s[1])
                 .Distinct()
                 .Select(s => new FederalState {Name = s});
 
             var districts = districtArray.Skip(3)
-                .SkipLast(2)
+                .SkipLast(1)
                 .Select(s => s.Split(";"))
                 .Select(s => new Tuple<string, string, string>(s[1], s[3], s[4]))
                 .Distinct()
